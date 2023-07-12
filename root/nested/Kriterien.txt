@@ -1,0 +1,40 @@
+Bitte lese hierzu folgende Informationen:
+
+Innoscripta ist ein Beratungsunternehmen, das andere Firmen dazu gewinnen möchte zusammen mit Ihnen die Forschungszulage zu beantragen. Das bedeutet, dass Innoscripta die Antragsstellung der Forschungszulage für die Unternehmen machen möchte, um eine Provision zu erhalten.
+Die Forschungszulage ist ein bundesweites Förderprogramm, das es Unternehmen ermöglicht 25% ihrer Personalkosten im Bereich der Forschung und Entwicklung (kurz F&E) fördern zu lassen. Es sind jährliche Fördersummen von bis zu 1 Mio € möglich, weshalb es bei einer Zusammenarbeit um viel Geld geht. 
+Hierfür ist es relevant, dass das Unternehmen Forschungs- bzw. Entwicklungsprojekte ausübt, also F&E-Kosten hat. Diese werden zum größten Teil durch die Anzahl der Mitarbeiter generell, aber primär durch die Anzahl der Mitarbeiter im Bereich F&E bestimmt. Umso mehr Mitarbeiter im F&E-Bereich, umso attraktiver ist das Unternehmen für eine Zusammenarbeit
+Der Text in "Kommentare der Vertriebsmitarbeiter" zeigt eine Reihe von Kommentaren von Vertriebsmitarbeitern der Firma Innoscripta. Hierbei ist der Name des Mitarbeiters und das Datum des Kommentars aufgeführt.
+Die Kommentare werden von den Mitarbeitern gemacht, um miteinander zu kommunizieren und den Bearbeitungsstand des jeweiligen Unternehmens zu dokumentieren.
+Der Prozess einer Zusammenarbeit ist in mehrere Stufen eingeteilt. Die este ist die Telko, die zweite die PKA (Projektkostenaufnahme), die dirtte der Erhalt des Mandats (Vertragsabschluss) und die vierte die Antragsaufnahme.
+Das erste Ziel ist es jedoch, mit dem richtigen Ansprechpartner eine Telefonkonferenz (kurz Telko) auszumachen. Hierzu recherchieren die Vertriebsmitarbeiter das Unternehmen, um die Kontaktdaten der relevanten Ansprechpartner (kurz AP oder APs) zu finden.
+Generell ist der AP umso besser, umso höher er in der Unternehmenshierarchie ist. Jedoch sind in Bezug auf die Forschungszulage auch APs  gut, die direkt mit F&E oder den Finanzen bzw. Steuern des Unternehmens zu tun haben. Beispiele für hervorragende APs sind:
+CEO, CTO, CFO, Vice Presidents (VP), F&E Leiter, Head of Innovation, Kaufmännischer Geschäftsführer, Geschäftsführer (Gf), Managing Director, Leiter Produktmanagement, Head of Controlling, Leiter Produktentwicklung.
+Du sollst also anhand aller Informationen, die dir zur Verfügung stehen, abschätzen, wie sinnvoll es ist dieses Unternehmen erneut bzw. erstmalig zu kontaktieren und diese Abschätzung in Form der Bewertung von 0 bis 100 ausdrücken.
+Hir ein paar relevante Kriterien, die dich bei der Entscheidung unterstützen sollen:
+
+Sehr relevant ist die Branche des Unternehmens. Ist es im Service- oder Dienstleistungsbereich tätig, gibt es eher weniger F&E-Aufwände, wohingegen Firmen, die im Technologiebereich arbeiten und Produkte herstellen mit hoher Wahrscheinlichkeit auch entwickeln bzw. forschen. Diese Differenzierung wird jedoch ab einer Unternehmensgröße von 1000 Mitarbeitern
+immer unwichtiger, da sehr große Unternehmen so gut wie immer F&E-Kosten haben. Diese Information lässt sich über den Namen oder die Website gut erschließen, falls diese gegeben ist.
+
+Gab es bereits eine Telko mit dem Unternehmen, ist besonders relevant, wann diese war. Wenn Sie länger als 3 Monate her war, dann könnte eine neue Kontaktanfrage angebracht sein. Hier ist abzuwägen, warum es bisher nicht zu weiteren Schritten kam. Wurde mehr als 3 mal eine Absage erteilt kann von einer erneuten Kontakaufnahme abgesehen werden. 
+Jedoch muss hierbei beachtet werden von wem die Absage kam und wie ausführlich der Kommentar geschrieben wurde. Absagen von relevanten APs zählen hier natürlich mehr. Ist der Kommentar sehr kurz und nicht ausführlich wie etwa "Machen es schon", kannst du die Aussage geringer gewichten.
+weiterhin sind die Gründe wichtig. Wird nur gesagt, dass derzeit kein Bedarf besteht, kann die Aussage nahezu vernachlässigt werden. Haben Sie bereits einen Diensleister, zählt die Aussage bereits etwas mehr. Erst wenn vehement darum gebeten wird keinen Kontakt mehr aufzunehmen, hat die Aussage hohe Gewichtung.
+Auch wenn das Unternehmen bereits die Forschungszulage bezieht sinkt das Unternehmen in seiner Bewertung. Hier ist jedoch besonders relevant wann diese Aussage getroffen wurde, da Sie die Forschungszulage evtl. in der Vergangheit selbst oder mit einem Dienstleister beantragt haben, jedoch mittlerweile unzufrieden mit dem Prozess sind und an einen neuen Dienstleister interessiert sind.
+Wie lange ist die Interaktion mit dem Unternehmen generell her? Wenn seit über 3 Monaten garnicht, nur mit Assistenten oder unrelevanten Aps gesprochen wurde, könnte es mittlerweile wieder interessant sein das Unternehmen zu kontaktieren.
+Die Größe des Unternehmens spielt auch eine wichtige Rolle, da große Unternehmen, bzw., die die mehr als 250 Mitarbeiter haben tendenziell mehr F&E-Aktivitäten besitzen. Bei Softwarefirmen können jedoch die Unternehmen auch kleiner sein, da hier oft fast ausschließlich Entwickler angestellt sind. 
+
+Neben der zahlenmäßigen Bewertung, gib mir bitte, falls vorhanden, den relevantesten Ansprechpartner, seine Position und seine Telefonnummer aus. Im letzten Punkt kannst du eine kurze sachliche Begründung für deine Bewertung angeben.
+Die Ausgabe dieser Information soll in folgendem Format erfolgen:
+
+Zahl von 0 bis 100, Name des Ansprechpartners, Position, Telefonnumer, Dein Kommentar
+
+Ein Beispiel:
+
+75, Franz Müller, CFO, 01784274, Herr Müller war sehr an einer Zusammenarbeit interessiert.
+
+Bitte erfinde keine Werte, sondern lass die Stellen frei, falls du nichts findest, wichtig ist nur dass die Syntax mit den Kommas eingehalten werden.
+
+Da diese Struktur so wichtig ist gebe ich dir erneut ein Beispiel ohne Werte:
+
+-,-,-,-,-
+
+Bitte bewerte nun das Unternehmen anhand der folgenden "Kommentare der Vertriebsmitarbeiter" von 0 bis 100 (0 für schlecht und 100 für sehr gut). Die Kommentare sind in UTF-8 kodiert.

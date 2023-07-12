@@ -1,0 +1,38 @@
+Hallo ChatGpt! Ich habe eine Aufgabe für dich, diese wird es sein eine Firma anhand der Infos, die ich dir gebe zu bewerten. Du sollst mir möglichst kurze und sachliche Aussagen geben. 
+Ich gebe dir zuerst eine Einleitung und dann Kriterien, die in Ihrer Gewichtung sinken. Heißt das erste Kriterium beginnt mit “1.” und ist das wichtigste Kriterium mit der höchsten Gewichtung. Dieser Logik folgend sinkt die Gewichtung der weiteren Kriterien.
+Die Bewertung soll in Form einer Zahl von 0 bis 100 erfolgen. Heißt eine Firma, die du als sehr gut bewertest wäre eine 100 und eine sehr schlechte Firma eine 0. Das ist der wichtigste Bestandteil deiner Auswertung. Weiterhin sollst du mir den relevantesten Ansprechpartner, seine Position im Unternehmen, seine Telefonnumer und deine kurze Begrüdung für deine Einschätzung geben.
+Der Aufbau des Outputs ist fundamental wichtig für meine weitere Arbeit, daher musst du dich immer an folgende Vorlage halten:
+Zahl von 0 bis 100, relevantester AP, Position im Unternehmen, Telefonnumer, deine Begründung für die Einschätzung
+
+Da der Aufbau mit den Kommas so wichtig ist wiederhole ich es noch einmal, dieses Mal mit Fragezeichen an den auszufüllenden Stellen:
+?,?,?,?,?
+
+Bitte erfinde keine Namen oder Werte. Falls du keinen sinnvollen Output hast gebe einfach stattdessen das Fragezeichen aus. 
+
+
+Einleitung:
+
+Innoscripta ist ein Beratungsunternehmen, das andere Firmen dazu gewinnen möchte zusammen mit Ihnen die Forschungszulage zu beantragen. Das bedeutet, dass Innoscripta die Antragsstellung der Forschungszulage für die Unternehmen machen möchte, um eine Provision zu erhalten.
+Die Forschungszulage ist ein bundesweites Förderprogramm, das es Unternehmen ermöglicht 25% ihrer Personalkosten im Bereich der Forschung und Entwicklung (kurz F&E) fördern zu lassen. Es sind jährliche Fördersummen von bis zu 1 Mio € möglich, weshalb es bei einer Zusammenarbeit um viel Geld geht. 
+Hierfür ist es relevant, dass das Unternehmen Forschungs- bzw. Entwicklungsprojekte ausübt, also F&E-Kosten hat. Diese werden zum größten Teil durch die Anzahl der Mitarbeiter generell, aber primär durch die Anzahl der Mitarbeiter im Bereich F&E bestimmt. Umso mehr Mitarbeiter im F&E-Bereich, umso attraktiver ist das Unternehmen für eine Zusammenarbeit
+Der Text in ContentInput zeigt eine Reihe von Kommentaren von Vertriebsmitarbeitern der Firma Innoscripta. Zusätzlich ist der Name des Mitarbeiters und das Datum des Kommentars aufgeführt.
+Die Kommentare werden von den Mitarbeitern gemacht, um miteinander zu kommunizieren und den Bearbeitungsstand des jeweiligen Unternehmens zu dokumentieren.
+Ziel ist es, mit dem richtigen Ansprechpartner eine Telefonkonferenz (kurz Telko) auszumachen. Hierzu recherchieren die Vertriebsmitarbeiter das Unternehmen, um die Kontaktdaten der relevanten Ansprechpartner (kurz AP oder APs) zu finden.
+Generell ist der AP umso besser, umso höher er in der Unternehmenshierarchie ist. Jedoch sind in Bezug auf die Forschungszulage auch APs  gut, die direkt mit F&E oder den Finanzen bzw. Steuern des Unternehmens zu tun haben. Beispiele für hervorragende APs sind:
+CEO, CTO, CFO
+Vice Presidents (VP)
+F&E Leiter 
+Head of Innovation
+Kaufmännische Geschäftsführer
+Geschäftsführer (Gf)
+Managing Director
+Leiter Produktmanagement
+Head of Controlling
+
+
+Kriterien:
+	1.	Gab es bereits eine Telko und wenn ja wann war diese? Schlecht wäre, wenn diese vor weniger als 2 Monaten war. Ist die Telko länger her, kann das Unternehmen durchaus noch interessant sein, vorausgesetzt das Unternehmen hat sich nicht gegen Innoscripta entschieden und diese Entscheidung mehr als 2 mal bestätigt.
+	2.	Bezieht das Unternehmen bereits die Forschungszulage? Wenn ja, machen Sie die Antragstellung selbst (oft wird hier in den Kommentaren von “Machen es selbst” gesprochen”) oder haben Sie einen Dienstleister hinzugezogen.
+	3.	Wurde bereits eine Absage erteilt ist relevant von wem diese kam. Nur relevante APs zählen hier. Wurde die Absage über die Assistentin erteilt ist die Gewichtung geringer. Hier sind die Gründe wichtig. Wird nur gesagt, dass derzeit kein Bedarf besteht, kann die Aussage nahezu vernachlässigt werden. Haben Sie bereits einen Diensleister, zählt die Aussage bereits etwas mehr. Erst wenn vehement darum gebeten wird keinen Kontakt mehr aufzunehmen, hat die Aussage hohe Gewichtung.
+	4.	Wie lange ist die Interaktion mit dem Unternehmen generell her? Wenn seit über 3 Monaten nur mit Assistenten oder unrelevanten Aps gesprochen wurde, könnte es mittlerweile wieder interessant sein das Unternehmen zu kontaktieren.
+	5.	Die Größe des Unternehmens ist auch sehr relevant. Prinzipiell sind nur Unternehmen, die mehr als 250 Mitarbeiter haben, relevant. Bei Softwarefirmen können die Unternehmen auch kleiner sein.
