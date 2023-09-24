@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium_recaptcha_solver import RecaptchaSolver
+from selenium.webdriver.chrome.service import Service
 
 from bs4 import BeautifulSoup
 
@@ -18,16 +19,17 @@ import openai
 from dotenv import load_dotenv
 from idlelib.query import Goto
 
-with open('KriterienV03.txt','r',encoding="utf8") as f:
+with open('KriterienV05.txt','r',encoding="utf8") as f:
     FirstInput = f.read()
 
 
 #DRIVER_PATH = "C:\Program Files\Google\ChromeDriver\chromedriver.exe"
 
+service = Service()
 options = webdriver.ChromeOptions()
 options.add_experimental_option('detach', True)
 options.add_argument("--start-maximized")
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(service=service, options=options)
 
 solver = RecaptchaSolver(driver=driver)
 
@@ -35,13 +37,18 @@ solver = RecaptchaSolver(driver=driver)
 website = "https://clusterix.io/companies"
 emailadresse = "schnittger@innoscripta.com"
 passwort = "ehz6afn"
-maMin = '1701'
-maMax = '1899'
+kampagneVon = "SFF Schnittger"
+maMin = '280'
+maMax = '289'
 kommentarMin = 5
 forbiddenTitle = "gGmbH"
 forbiddenTitle2 = "gemeinnützig"
-AnzahlKommentare = 50
-ApiKey = "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"
+forbiddenTitle3 = "e.V."
+forbiddenTitle4 = "Rente"
+forbiddenTitle5 = "Kliniken"
+forbiddenTitle6 = "Klinikum"
+AnzahlKommentare = 20
+ApiKey = "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"
 
 i = 0
 while os.path.exists("Auswertung%s.txt" % i):
@@ -53,14 +60,14 @@ sleep(2)
 driver.execute_script('chrome.settingsPrivate.setDefaultZoom(0.9);')
 sleep(2)
 driver.get(website)
-sleep(20)
+sleep(10)
 
 #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH,"//*[@id='uc-center-container']/div[2]/div/div[1]/div/div/button[2]"))).click()
-
+'''
 shadow_parent = driver.find_element(By.CSS_SELECTOR, '#usercentrics-root')
 outer = driver.execute_script('return arguments[0].shadowRoot', shadow_parent)
 outer.find_element(By.CSS_SELECTOR, "button[data-testid='uc-accept-all-button']").click()
-
+'''
 email = driver.find_element(By.NAME,"email")
 email.send_keys(emailadresse)
 
@@ -78,50 +85,73 @@ sleep(5)
 
 driver.switch_to.parent_frame()
 
-anmelden = driver.find_element(By.XPATH, '//*[@id="root"]/div/div/div/div[5]/div/button')
+anmelden = driver.find_element(By.XPATH, '//*[@id="login-form"]/div[3]/div[3]/button')
 anmelden.click()
 
-sleep(15)
+sleep(10)
+
+#chooseKampagne = driver.find_element(By.CLASS_NAME,"campaigns-navigation-header__campaigns__label")
+#chooseKampagne.click()
+#sleep(2)
+
+#textFeldKampagne = driver.find_element(By.CLASS_NAME, 'ca-pr-yellow.ca-pl-yellow.ca-font-sans.ca-border.ca-border-grey-dark.ca-border-solid.ca-rounded.ca-appearance-none.ca-w-full.ca-box-border.hover:ca-outline-none.focus:ca-outline-none.placeholder:ca-text-grey-dark.placeholder:ca-font-sans.disabled:ca-bg-grey.ca-py-orange.ca-text-base')
+#textFeldKampagne.send_keys(kampagneVon)
 
 mitarbeiter = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[1]/div/div[3]/div[5]/div[1]')
 mitarbeiter.click()
-
 sleep(1)
 
 ma_size = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[1]/div/div[3]/div[5]/div[2]/div/div/div/div[1]/input[1]')
 ma_size.send_keys(maMin)
 
-max_size = driver.find_element(By.CSS_SELECTOR,'#main_content > div > div.NewCompanySearch_filters__3-AZx.NewCompanySearch_animated-part__3tNLs > div > div.FiltersBar_filters__Ag5i6 > div:nth-child(5) > div.ca-h-auto.ca-origin-top-left.ca-ease-in-out.ca-duration-300.ca-hidden.ca-scale-y-0 > div > div > div > div.ca_rangeslider_v2__inputs > input[type=text]:nth-child(3)')
+sleep(1)
+
+max_size = driver.find_element(By.CSS_SELECTOR,'#main_content > div > div.NewCompanySearch_filters__Vtst8.NewCompanySearch_animated-part__5r31H > div > div.FiltersBar_filters__g\+caY > div:nth-child(5) > div.FilterItem_closable-box__zGgzT.FilterItem_open__tNqpL > div > div > div > div.ca_rangeslider_v2__inputs > input[type=text]:nth-child(3)')
 max_size.send_keys(Keys.BACKSPACE)
 max_size.send_keys(maMax)
 
 
-kommentare = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[1]/div/div[3]/div[7]/div[1]')
-kommentare.click()
+#kommentare = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[1]/div/div[3]/div[7]/div[1]')
+#kommentare.click()
 
-sleep(1)
+#sleep(1)
 
-vierzehnTage = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[1]/div/div[3]/div[7]/div[2]/div/div/div[2]')
-vierzehnTage.click()
+#vierzehnTage = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[1]/div/div[3]/div[7]/div[2]/div/div/div[2]')
+#vierzehnTage.click()
  
-sleep(30)
+sleep(5)
 
 
 pages = driver.find_elements(By.CLASS_NAME,'ca-whitespace-nowrap')
 numberOfPages = pages[-1].text
 actions = ActionChains(driver)
 
-print (numberOfPages)
+print ('Seitenanzahl: ' + numberOfPages)
 
 n = 1
 while n <= int(numberOfPages):
     
-    #input ('Enter to continue...') 
     sleep(5)
     
-    kommentarElements = driver.find_elements(By.CLASS_NAME,'CompanyBox_comments__FGxdx.CompanyBox_part__27YQc.CompanyBox_button__1n4E5')
-    kampagnenElements = driver.find_elements(By.CSS_SELECTOR, ".ca-text-theme.ca-fill-theme.hover\:ca-bg-theme-10.hover\:ca-text-theme.hover\:ca-fill-theme.focus-visible\:ca-outline.ca-outline-offset-2.ca-outline-theme-dark.active\:ca-bg-theme-dark.active\:ca-text-white.active\:ca-fill-white.ca-flex.ca-items-center.ca-justify-center.ca-rounded.ca-py-aqua.ca-px-yellow.hover\:ca-cursor-pointer.ca-w-fit, .ca-text-grey-dark.ca-fill-grey-dark.CompanyBox_disabled__2ewk5.ca-flex.ca-items-center.ca-justify-center.ca-rounded.ca-py-aqua.ca-px-yellow.hover\:ca-cursor-not-allowed.ca-w-fit")
- 
+    kommentarElements = driver.find_elements(By.CSS_SELECTOR,'div.CompanyBox_comments__NJXr\+.CompanyBox_part__RF7W2.CompanyBox_button__9y6iA')
+    kampagnenElements = driver.find_elements(By.CLASS_NAME,'CompanyBox_campaign__2lYMS.CompanyBox_part__RF7W2')
+    kampagnenElementsAvailableOrNot = []
+    
+    for y in kampagnenElements:
+                html5 = y.get_attribute('innerHTML')
+                soup5 = BeautifulSoup(html5, 'html.parser')
+                div_text5class1 = soup5.find_all('div', {'class' : 'ca-text-theme ca-fill-theme hover:ca-bg-theme-10 hover:ca-text-theme hover:ca-fill-theme focus-visible:ca-outline ca-outline-offset-2 ca-outline-theme-dark active:ca-bg-theme-dark active:ca-text-white active:ca-fill-white ca-flex ca-items-center ca-justify-center ca-rounded ca-py-aqua ca-px-yellow hover:ca-cursor-pointer ca-w-fit'})
+                div_text5class2 = soup5.find_all('div', {'class' : 'ca-text-grey-dark ca-fill-grey-dark CompanyBox_disabled__bgjoQ ca-flex ca-items-center ca-justify-center ca-rounded ca-py-aqua ca-px-yellow hover:ca-cursor-not-allowed ca-w-fit'})
+                
+                if (len(div_text5class1) == 0):
+                    kampagnenElementsAvailableOrNot.append(div_text5class2[0])
+                else:
+                    kampagnenElementsAvailableOrNot.append(div_text5class1[0])
+                    
+    print(len(kampagnenElementsAvailableOrNot))                
+    for x in kampagnenElementsAvailableOrNot:
+        print(x.get('class'))
+    
     for idx, x in enumerate(kommentarElements):
         
         tries = 1;
@@ -131,6 +161,8 @@ while n <= int(numberOfPages):
         html = x.get_attribute('innerHTML')
         soup = BeautifulSoup(html, 'html.parser')
         span_text = soup.find('span').text
+               
+        
         
         if span_text == '-' or span_text == '' or "@" in span_text:
             continue
@@ -142,13 +174,15 @@ while n <= int(numberOfPages):
             continue
         
         # Clicks on a company
-        if int(span_text) >= kommentarMin and kampagnenElements[idx].get_attribute("class") == "ca-text-theme ca-fill-theme hover:ca-bg-theme-10 hover:ca-text-theme hover:ca-fill-theme focus-visible:ca-outline ca-outline-offset-2 ca-outline-theme-dark active:ca-bg-theme-dark active:ca-text-white active:ca-fill-white ca-flex ca-items-center ca-justify-center ca-rounded ca-py-aqua ca-px-yellow hover:ca-cursor-pointer ca-w-fit":
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable(x)).click()
-            #input ('Enter to continue...') 
+        if int(span_text) >= kommentarMin and kampagnenElementsAvailableOrNot[idx].get('class')[0] == "ca-text-theme":
+            
+            WebDriverWait(driver, 10).until(EC.element_to_be_clickable(x)).click() 
             sleep(10)
             
-            title = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[1]/h3')
-            if forbiddenTitle in title.text or forbiddenTitle2 in title.text:
+            title = driver.find_elements(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[1]/h3')
+            if len(title) == 0:
+                continue
+            if forbiddenTitle in title[0].text or forbiddenTitle2 in title[0].text or forbiddenTitle3 in title[0].text or forbiddenTitle4 in title[0].text or forbiddenTitle5 in title[0].text or forbiddenTitle6 in title[0].text:
                 driver.find_element(By.CLASS_NAME, 'ca_button.content-panel_content-panel__header__close-button__ZsuHV.size3.variant3.hasicon').click()
                 sleep(1)
                 continue
@@ -168,53 +202,69 @@ while n <= int(numberOfPages):
             test = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]/div/div/label')
             
             if test.get_attribute("class") == "ca-relative ca-flex ca-justify-center ca-items-center ca-overflow-hidden ca-appearance-none ca-m-0 ca-w-[var(--size)] ca-h-[var(--size)] ca-border ca-border-solid ca-rounded ca-bg-theme ca-border-theme group-hover:ca-border-theme-dark group-hover:ca-bg-theme-dark ca-box-border ca-gap-red ca-font-semibold ca-flex ca-items-center ca-m-0 ca-cursor-pointer":
-                #clicking several times because of bug
-                sleep(20)
+                sleep(5)
                 checkboxVisible.click() 
                 sleep(3)
             else:
-                sleep(20)
+                sleep(10)
                 
-            
-            companyInGroupComplete = []
             maZahl = driver.find_element(By.CLASS_NAME,'number_of_employee').text
                 
-            nameTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__name__2ROAL')
-            companyInGroup = driver.find_elements(By.CLASS_NAME,'comment_comment__header__3iTZo')
-            for x in companyInGroup:
-                html2 = x.get_attribute('innerHTML')
+            nameTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__name__iUAMK')
+            companyInGroupComplete = []
+            commentsComplete = []
+            companyInGroup = driver.find_elements(By.CLASS_NAME,'common-card-with-avatar_card-with-avatar__body__U0ol3.comment_comment__body__9HVG2')
+            for y in companyInGroup:
+                html2 = y.get_attribute('innerHTML')
                 soup2 = BeautifulSoup(html2, 'html.parser')
-                span_text2 = soup2.find_all('span', {'class' : 'comment_comment__info_badge_company__lZ6r-'})
+                span_text2 = soup2.find_all('span', {'class' : 'comment_comment__info_badge_company__qGIy6'})
+                div_text2 = soup2.find_all('div', {'class' : 'comment_comment__content__rB5+D'})
                 
                 if (len(span_text2) == 0):
-                    companyInGroupComplete.append(title.text)
+                    companyInGroupComplete.append(title[0].text)
                 else:
                     companyInGroupComplete.append(span_text2[0].text)
+                    
+                if (len(div_text2) == 0):
+                    commentsComplete.append('Unternehmen wurde von Vertriebsmitarbeiter aus Kampagne entfernt')
+                else:
+                    commentsComplete.append(div_text2[0].text)
             
                 
-            dateTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__date__3xJTk')
-            commentTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__content__2BFjV')
+            dateTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__date__Gn93j')
+            #commentTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__content__rB5+D')
             
+            commentTokensComplete = []
+            commentBlock = driver.find_elements(By.CSS_SELECTOR, 'div.comment_comment__content__rB5\+D')
             
-            
+            #input("Enter...")
+
+            ContentInputArray = []
             ContentInput = ""
-            
+            ContentInputSingleString = ""
             for idx, x in enumerate(nameTokens):
-                ContentInput = ContentInput + "\n" + "Vertriebsmitarbeiter: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "Unternehmen innerhalb des Konzerns: " + companyInGroupComplete[idx] + "\n" + commentTokens[idx].text + "\n"
-            
-            print (ContentInput)
+                
+                ContentInput = ContentInput + "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "U.i.V.: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
+                ContentInputSingleString = "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "U.i.V.: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
+                ContentInputArray.append(ContentInputSingleString)
               
-            #print("\n" + title.text + ": \n" + ContentInput)
             f = open("Kommentare.txt", "a", encoding='utf-8')
-            f.write("\n" + title.text + ": \n" + ContentInput)
+            f.write("\n" + title[0].text + ": \n" + ContentInput)
             f.close()
             
         
                                                        
             Intro = "Hallo ChatGpt! Ich habe eine Aufgabe für dich. Bitte bewerte folgendes Unternehmen: \n"
-            UDaten = title.text + "(" + maZahl + ') \n'
+            UDaten = title[0].text + "(" + maZahl + ') \n'
             ChatWebsite = 'Website:' + website + '\n'
-            ContentInput50 = "Kommentare der Vertriebsmitarbeiter: " + ContentInput[-AnzahlKommentare:]
+            ContentInput50 = ContentInputArray[-AnzahlKommentare:]
+
+            ContentInput50String = ' '.join(ContentInput50)
+            
+            ChatGPTInput = Intro + UDaten + ChatWebsite + FirstInput + "Kommentare der Vertriebsmitarbeiter (max. die letzten 30): " + ContentInput50String
+            print(UDaten + ChatWebsite)
+            print(ChatGPTInput)
+        
             
             load_dotenv()
     
@@ -224,7 +274,7 @@ while n <= int(numberOfPages):
                 
                 try:
                     
-                    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": Intro + UDaten + ChatWebsite + FirstInput + ContentInput50}])
+                    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": ChatGPTInput}])
         
                 except openai.error.RateLimitError as e:
                 # Handle the rate limit error
@@ -248,25 +298,26 @@ while n <= int(numberOfPages):
                 
                 break
             
-            print(title.text)
-            print(completion.choices[0].message.content)
+            print("ChatGPT-Antwort: " + completion.choices[0].message.content)
             
                 
             f = open("Auswertung%s.txt" % i, "a")
-            f.write(title.text + ": "+ completion.choices[0].message.content + "\n")
+            f.write(title[0].text + ": "+ completion.choices[0].message.content + "\n")
             f.close()
             
             rating = completion.choices[0].message.content.split(',')[0]
             
             try:    
                 if int(rating) >= 60:
+                #if rating == "JA":
                     driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[1]/div').click()
                     sleep(3)
             except ValueError as ve:
-                print("Fehlerhafte Analyse: " + title.text)
+                print("Fehlerhafte Analyse: " + title[0].text)
             
             
-            driver.find_element(By.CLASS_NAME, 'ca_button.content-panel_content-panel__header__close-button__ZsuHV.size3.variant3.hasicon').click()
+            driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
+            
             sleep(1)
     
     # Close button
@@ -274,7 +325,7 @@ while n <= int(numberOfPages):
     
     pageSelector = driver.find_elements(By.CLASS_NAME,'ca_paginationbar_page-selector')
     pageSelector[-1].click()
-    sleep(30)
+    sleep(10)
     n+=1
 
 
