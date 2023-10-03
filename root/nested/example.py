@@ -183,14 +183,14 @@ while n <= int(numberOfPages):
             if len(title) == 0:
                 continue
             if forbiddenTitle in title[0].text or forbiddenTitle2 in title[0].text or forbiddenTitle3 in title[0].text or forbiddenTitle4 in title[0].text or forbiddenTitle5 in title[0].text or forbiddenTitle6 in title[0].text:
-                driver.find_element(By.CLASS_NAME, 'ca_button.content-panel_content-panel__header__close-button__ZsuHV.size3.variant3.hasicon').click()
+                driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
                 sleep(1)
                 continue
             
             globaleMutterTitle = driver.find_elements(By.CLASS_NAME,'tree__company-name')  
             if len(globaleMutterTitle) != 0:
                 if forbiddenTitle in globaleMutterTitle[0].text:
-                    driver.find_element(By.CLASS_NAME, 'ca_button.content-panel_content-panel__header__close-button__ZsuHV.size3.variant3.hasicon').click()
+                    driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
                     sleep(1)
                     continue
             
