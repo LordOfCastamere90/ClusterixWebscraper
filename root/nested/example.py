@@ -10,6 +10,12 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium_recaptcha_solver import RecaptchaSolver
 from selenium.webdriver.chrome.service import Service
+import csv
+from dateutil.relativedelta import *
+from dateutil.easter import *
+from dateutil.rrule import *
+from dateutil.parser import *
+from datetime import *
 
 from bs4 import BeautifulSoup
 
@@ -19,8 +25,16 @@ import openai
 from dotenv import load_dotenv
 from idlelib.query import Goto
 
-with open('KriterienV05.txt','r',encoding="utf8") as f:
+with open('KriterienV06.txt','r',encoding="utf8") as f:
     FirstInput = f.read()
+
+csv_file_path = 'ForbiddenComments.csv'
+
+with open(csv_file_path, 'r',encoding="utf8") as file:
+    csv_reader = csv.reader(file)
+    forbiddenComments = []
+    for row in csv_reader:
+        forbiddenComments.append(row)
 
 
 #DRIVER_PATH = "C:\Program Files\Google\ChromeDriver\chromedriver.exe"
@@ -48,7 +62,12 @@ forbiddenTitle4 = "Rente"
 forbiddenTitle5 = "Kliniken"
 forbiddenTitle6 = "Klinikum"
 AnzahlKommentare = 20
+maxDaySinceFatalComment = 300
 ApiKey = "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"
+
+def get_difference(startdate, enddate):
+    diff = enddate - startdate
+    return diff.days  
 
 i = 0
 while os.path.exists("Auswertung%s.txt" % i):
@@ -202,10 +221,9 @@ while n <= int(numberOfPages):
             test = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]/div/div/label')
             
             if test.get_attribute("class") == "ca-relative ca-flex ca-justify-center ca-items-center ca-overflow-hidden ca-appearance-none ca-m-0 ca-w-[var(--size)] ca-h-[var(--size)] ca-border ca-border-solid ca-rounded ca-bg-theme ca-border-theme group-hover:ca-border-theme-dark group-hover:ca-bg-theme-dark ca-box-border ca-gap-red ca-font-semibold ca-flex ca-items-center ca-m-0 ca-cursor-pointer":
-                sleep(5)
-                checkboxVisible.click() 
-                sleep(3)
+                sleep(1)
             else:
+                checkboxVisible.click()
                 sleep(10)
                 
             maZahl = driver.find_element(By.CLASS_NAME,'number_of_employee').text
@@ -237,8 +255,32 @@ while n <= int(numberOfPages):
             commentTokensComplete = []
             commentBlock = driver.find_elements(By.CSS_SELECTOR, 'div.comment_comment__content__rB5\+D')
             
-            #input("Enter...")
+            #Creation of 2D Matrix with strings
+            commentBlock_Each = []
+            matrix_2 = []
+            
+            for idx, x in enumerate(nameTokens):
+                
+                commentBlock_Each.append(x.text,dateTokens[idx].text,companyInGroup[idx], commentsComplete[idx])
+                matrix_2.append(commentBlock_Each)
+                
+            this_year = datetime.today().year
 
+            for nonoComment in forbiddenComments:
+                for comment in matrix_2:
+                    for commentData in commentBlock_Each:
+                        timeStampClx = commentBlock_Each[1]
+                        if len(timeStampClx) < 19:
+                            timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m. um %H:%M').replace(year=this_year)
+                        else:
+                            timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m.%Y um %H:%M')
+
+                        if nonoComment[0].lower() in commentBlock_Each[3].lower and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
+                            driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
+                            sleep(1)
+                            continue
+            
+            #Creation of 1D Matrix with strings
             ContentInputArray = []
             ContentInput = ""
             ContentInputSingleString = ""
