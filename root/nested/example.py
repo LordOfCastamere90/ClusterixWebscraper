@@ -16,6 +16,7 @@ from dateutil.easter import *
 from dateutil.rrule import *
 from dateutil.parser import *
 from datetime import *
+from difflib import SequenceMatcher
 
 from bs4 import BeautifulSoup
 
@@ -49,11 +50,12 @@ solver = RecaptchaSolver(driver=driver)
 
 #Variabeln:
 website = "https://clusterix.io/companies"
-emailadresse = "schnittger@innoscripta.com"
-passwort = "ehz6afn"
+emailadresse = "deineName@innoscripta.com"
+passwort = "DeinPasswort"
+ApiKey = "DeinKey"
 kampagneVon = "SFF Schnittger"
-maMin = '280'
-maMax = '289'
+maMin = '290'
+maMax = '348'
 kommentarMin = 5
 forbiddenTitle = "gGmbH"
 forbiddenTitle2 = "gemeinnützig"
@@ -63,11 +65,15 @@ forbiddenTitle5 = "Kliniken"
 forbiddenTitle6 = "Klinikum"
 AnzahlKommentare = 20
 maxDaySinceFatalComment = 300
-ApiKey = "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"
+similarityRatio = 0.89
+
 
 def get_difference(startdate, enddate):
     diff = enddate - startdate
-    return diff.days  
+    return diff.days 
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio() 
 
 i = 0
 while os.path.exists("Auswertung%s.txt" % i):
@@ -167,9 +173,7 @@ while n <= int(numberOfPages):
                 else:
                     kampagnenElementsAvailableOrNot.append(div_text5class1[0])
                     
-    print(len(kampagnenElementsAvailableOrNot))                
-    for x in kampagnenElementsAvailableOrNot:
-        print(x.get('class'))
+                    
     
     for idx, x in enumerate(kommentarElements):
         
@@ -261,7 +265,11 @@ while n <= int(numberOfPages):
             
             for idx, x in enumerate(nameTokens):
                 
-                commentBlock_Each.append(x.text,dateTokens[idx].text,companyInGroup[idx], commentsComplete[idx])
+                commentBlock_Each.append(x.text)
+                commentBlock_Each.append(dateTokens[idx].text)
+                commentBlock_Each.append(companyInGroup[idx])
+                commentBlock_Each.append(commentsComplete[idx])
+                
                 matrix_2.append(commentBlock_Each)
                 
             this_year = datetime.today().year
@@ -274,8 +282,9 @@ while n <= int(numberOfPages):
                             timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m. um %H:%M').replace(year=this_year)
                         else:
                             timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m.%Y um %H:%M')
-
-                        if nonoComment[0].lower() in commentBlock_Each[3].lower and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
+                        
+                        similarity = similar(str(nonoComment[0].lower()),str(commentBlock_Each[3].lower))
+                        if str(nonoComment[0].lower()) in str(commentBlock_Each[3].lower) and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
                             driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
                             sleep(1)
                             continue
@@ -305,7 +314,7 @@ while n <= int(numberOfPages):
             
             ChatGPTInput = Intro + UDaten + ChatWebsite + FirstInput + "Kommentare der Vertriebsmitarbeiter (max. die letzten 30): " + ContentInput50String
             print(UDaten + ChatWebsite)
-            print(ChatGPTInput)
+            #print(ChatGPTInput)
         
             
             load_dotenv()
@@ -347,8 +356,14 @@ while n <= int(numberOfPages):
             f.write(title[0].text + ": "+ completion.choices[0].message.content + "\n")
             f.close()
             
-            rating = completion.choices[0].message.content.split(',')[0]
+            chatGPTOutput = completion.choices[0].message.content
+            rating_als_liste = chatGPTOutput.split(' ')
             
+            for i in rating_als_liste:
+                if i.isdigit():
+                    rating = i
+            
+            print('Extrahierte Bewertung: ' + rating)
             try:    
                 if int(rating) >= 60:
                 #if rating == "JA":
