@@ -50,12 +50,12 @@ solver = RecaptchaSolver(driver=driver)
 
 #Variabeln:
 website = "https://clusterix.io/companies"
-emailadresse = "deineName@innoscripta.com"
-passwort = "DeinPasswort"
-ApiKey = "DeinKey"
+emailadresse = "schnittger@innoscripta.com"
+passwort = "ehz6afn"
+ApiKey = "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"
 kampagneVon = "SFF Schnittger"
-maMin = '290'
-maMax = '348'
+maMin = '351'
+maMax = '401'
 kommentarMin = 5
 forbiddenTitle = "gGmbH"
 forbiddenTitle2 = "gemeinnützig"
@@ -87,12 +87,12 @@ sleep(2)
 driver.get(website)
 sleep(10)
 
-#WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH,"//*[@id='uc-center-container']/div[2]/div/div[1]/div/div/button[2]"))).click()
-'''
+#CookieFenster
 shadow_parent = driver.find_element(By.CSS_SELECTOR, '#usercentrics-root')
 outer = driver.execute_script('return arguments[0].shadowRoot', shadow_parent)
 outer.find_element(By.CSS_SELECTOR, "button[data-testid='uc-accept-all-button']").click()
-'''
+
+#Kontoanmeldung
 email = driver.find_element(By.NAME,"email")
 email.send_keys(emailadresse)
 
@@ -260,11 +260,11 @@ while n <= int(numberOfPages):
             commentBlock = driver.find_elements(By.CSS_SELECTOR, 'div.comment_comment__content__rB5\+D')
             
             #Creation of 2D Matrix with strings
-            commentBlock_Each = []
             matrix_2 = []
             
+            print("commentsComplete: " + commentsComplete[-1])
             for idx, x in enumerate(nameTokens):
-                
+                commentBlock_Each = []
                 commentBlock_Each.append(x.text)
                 commentBlock_Each.append(dateTokens[idx].text)
                 commentBlock_Each.append(companyInGroup[idx])
@@ -276,18 +276,25 @@ while n <= int(numberOfPages):
 
             for nonoComment in forbiddenComments:
                 for comment in matrix_2:
-                    for commentData in commentBlock_Each:
-                        timeStampClx = commentBlock_Each[1]
-                        if len(timeStampClx) < 19:
-                            timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m. um %H:%M').replace(year=this_year)
-                        else:
-                            timeStampClxInterpr = datetime.strptime(commentBlock_Each[1], '%d.%m.%Y um %H:%M')
-                        
-                        similarity = similar(str(nonoComment[0].lower()),str(commentBlock_Each[3].lower))
-                        if str(nonoComment[0].lower()) in str(commentBlock_Each[3].lower) and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
-                            driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
-                            sleep(1)
-                            continue
+                    timeStampClx = comment[1]
+                    print("timeStampClx: " + timeStampClx)
+                    print("comment[3]: " + comment[3])
+                    if len(timeStampClx) < 19:
+                        timeStampClxInterpr = datetime.strptime(comment[1], '%d.%m. um %H:%M').replace(year=this_year)
+                    else:
+                        timeStampClxInterpr = datetime.strptime(comment[1], '%d.%m.%Y um %H:%M')
+                    
+                    #similarity = similar(str(nonoComment[0].lower()),str(commentBlock_Each[3].lower))
+                    print("nonoComment: " + (nonoComment[0]).lower())
+                    print("commentBlock: " + (comment[3]).lower())
+                    print("commentBlock (ohen klammern): " + comment[3].lower())
+                    print(datetime.today() - timeStampClxInterpr)
+                    
+                    input("Enter to test next...")
+                    if str(nonoComment[0].lower()) in str(comment[3].lower()) and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
+                        driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
+                        sleep(1)
+                        continue
             
             #Creation of 1D Matrix with strings
             ContentInputArray = []

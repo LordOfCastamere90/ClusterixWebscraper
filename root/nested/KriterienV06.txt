@@ -78,5 +78,6 @@ sind versorgt
 sind bereits mandatiert
 
 Also, denk dran. Du stirbst wenn du etwas anderes ausgibst als die Zahl von 0 bis 100.
-Gebe nun also diese Zahl in das Terminal ein.
+Gebe nun also als erstes diese Zahl in das Terminal ein.
 Aber sei vorsichtig, der Gott der Firmenbewertung ist gnadenlos und wird jeden weiteren Output mit dem Tod bestrafen, es darf also nur diese Zahl ausgegeben werden!
+
