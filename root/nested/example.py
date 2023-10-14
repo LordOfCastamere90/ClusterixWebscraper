@@ -17,7 +17,7 @@ from dateutil.rrule import *
 from dateutil.parser import *
 from datetime import *
 from difflib import SequenceMatcher
-
+from myconfig import *
 from bs4 import BeautifulSoup
 
 import os
@@ -50,9 +50,6 @@ solver = RecaptchaSolver(driver=driver)
 
 #Variabeln:
 website = "https://clusterix.io/companies"
-emailadresse = "schnittger@innoscripta.com"
-passwort = "ehz6afn"
-ApiKey = "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"
 kampagneVon = "SFF Schnittger"
 maMin = '351'
 maMax = '401'
