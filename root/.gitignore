@@ -2,4 +2,4 @@
 # Environments
 .env
 
-config.py
+myconfig.py
