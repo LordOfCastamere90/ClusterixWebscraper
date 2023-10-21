@@ -1,1 +1,0 @@
-KYOCERA AVX Components (Werne) GmbH: Da ich nur eine Zahl von 0 bis 100 ausgeben darf und maximal drei Ziffern verwenden kann, gebe ich die Zahl 020 aus.

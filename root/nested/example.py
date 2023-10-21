@@ -1,3 +1,4 @@
+# import libraries
 from selenium import webdriver
 from time import sleep
 from selenium.webdriver.common.keys import Keys
@@ -26,6 +27,7 @@ import openai
 from dotenv import load_dotenv
 from idlelib.query import Goto
 
+# External files: Kriterienkatalog & Forbidden comments:
 with open('KriterienV06.txt','r',encoding="utf8") as f:
     FirstInput = f.read()
 
@@ -37,20 +39,16 @@ with open(csv_file_path, 'r',encoding="utf8") as file:
     for row in csv_reader:
         forbiddenComments.append(row)
 
-
-#DRIVER_PATH = "C:\Program Files\Google\ChromeDriver\chromedriver.exe"
-
+# adjustments to keep window visible
 service = Service()
 options = webdriver.ChromeOptions()
 options.add_experimental_option('detach', True)
 options.add_argument("--start-maximized")
 driver = webdriver.Chrome(service=service, options=options)
 
-solver = RecaptchaSolver(driver=driver)
-
 #Variabeln:
 website = "https://clusterix.io/companies"
-kampagneVon = "SFF Schnittger"
+kampagneVon = "SFF Autobot"
 maMin = '351'
 maMax = '401'
 kommentarMin = 5
@@ -64,7 +62,7 @@ AnzahlKommentare = 20
 maxDaySinceFatalComment = 300
 similarityRatio = 0.89
 
-
+# Funktionen:
 def get_difference(startdate, enddate):
     diff = enddate - startdate
     return diff.days 
@@ -72,14 +70,15 @@ def get_difference(startdate, enddate):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio() 
 
-i = 0
-while os.path.exists("Auswertung%s.txt" % i):
-    i += 1
+# Erstellen von Auswertungsdatei mit ansteigender Zahl:
+z = 0
+while os.path.exists("Auswertung%s.txt" % z):
+    z += 1
 
 #Und Zooooom
 driver.get('chrome://settings/appearance')
 sleep(2)
-driver.execute_script('chrome.settingsPrivate.setDefaultZoom(0.9);')
+driver.execute_script('chrome.settingsPrivate.setDefaultZoom(0.7);')
 sleep(2)
 driver.get(website)
 sleep(10)
@@ -95,6 +94,9 @@ email.send_keys(emailadresse)
 
 password = driver.find_element(By.NAME,"password")
 password.send_keys(passwort)
+
+# Captcha solver
+# solver = RecaptchaSolver(driver=driver)
 '''
 frame_ref = driver.find_elements(By.TAG_NAME,"iframe")[0]
 iframe = driver.switch_to.frame(frame_ref)
@@ -105,6 +107,7 @@ robot.click()
 '''
 sleep(5)
 
+# Anmeldung:
 driver.switch_to.parent_frame()
 
 anmelden = driver.find_element(By.XPATH, '//*[@id="login-form"]/div[3]/div[3]/button')
@@ -112,13 +115,22 @@ anmelden.click()
 
 sleep(10)
 
-#chooseKampagne = driver.find_element(By.CLASS_NAME,"campaigns-navigation-header__campaigns__label")
-#chooseKampagne.click()
-#sleep(2)
+# Kampagne wählen
+
+campaignNavigationBar = driver.find_element(By.CLASS_NAME,'campaigns-navigation-header__part')
+campaignNavigationBar.click()
+sleep(1)
+chooseKampagne = driver.find_element(By.CLASS_NAME,'ca-pr-yellow')
+chooseKampagne.send_keys(Keys.CONTROL, "a")
+chooseKampagne.send_keys(Keys.DELETE)
+chooseKampagne.send_keys(kampagneVon)
+chooseKampagne.send_keys(Keys.ENTER)
+sleep(2)
 
 #textFeldKampagne = driver.find_element(By.CLASS_NAME, 'ca-pr-yellow.ca-pl-yellow.ca-font-sans.ca-border.ca-border-grey-dark.ca-border-solid.ca-rounded.ca-appearance-none.ca-w-full.ca-box-border.hover:ca-outline-none.focus:ca-outline-none.placeholder:ca-text-grey-dark.placeholder:ca-font-sans.disabled:ca-bg-grey.ca-py-orange.ca-text-base')
 #textFeldKampagne.send_keys(kampagneVon)
 
+# Einstellung der Firmenkriterien
 mitarbeiter = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[1]/div/div[3]/div[5]/div[1]')
 mitarbeiter.click()
 sleep(1)
@@ -132,7 +144,7 @@ max_size = driver.find_element(By.CSS_SELECTOR,'#main_content > div > div.NewCom
 max_size.send_keys(Keys.BACKSPACE)
 max_size.send_keys(maMax)
 
-
+# Wann wurde das letzte mal kommentiert:
 #kommentare = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[1]/div/div[3]/div[7]/div[1]')
 #kommentare.click()
 
@@ -148,17 +160,18 @@ pages = driver.find_elements(By.CLASS_NAME,'ca-whitespace-nowrap')
 numberOfPages = pages[-1].text
 actions = ActionChains(driver)
 
-print ('Seitenanzahl: ' + numberOfPages)
-
+# loop over pages:
 n = 1
 while n <= int(numberOfPages):
     
     sleep(5)
     
+    #identifiing comment and "add to campaign"- elements
     kommentarElements = driver.find_elements(By.CSS_SELECTOR,'div.CompanyBox_comments__NJXr\+.CompanyBox_part__RF7W2.CompanyBox_button__9y6iA')
     kampagnenElements = driver.find_elements(By.CLASS_NAME,'CompanyBox_campaign__2lYMS.CompanyBox_part__RF7W2')
     kampagnenElementsAvailableOrNot = []
     
+    # array of "add to campaign elemenents" available or not:
     for y in kampagnenElements:
                 html5 = y.get_attribute('innerHTML')
                 soup5 = BeautifulSoup(html5, 'html.parser')
@@ -171,11 +184,12 @@ while n <= int(numberOfPages):
                     kampagnenElementsAvailableOrNot.append(div_text5class1[0])
                     
                     
-    
+    # loop over companies with enough comments:
     for idx, x in enumerate(kommentarElements):
         
         tries = 1;
         
+        # scroll to element
         actions.move_to_element(x).perform()
         
         html = x.get_attribute('innerHTML')
@@ -183,9 +197,12 @@ while n <= int(numberOfPages):
         span_text = soup.find('span').text
                
         
-        
-        if span_text == '-' or span_text == '' or "@" in span_text:
+        # how many comments?
+        if span_text == '-' or span_text == '':
             continue
+        
+        if "@" in span_text:
+            spant_text = 10
         
         if span_text == '99+':
             span_text = '99'
@@ -199,6 +216,7 @@ while n <= int(numberOfPages):
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable(x)).click() 
             sleep(10)
             
+            # if company name is invalid continue:
             title = driver.find_elements(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[1]/h3')
             if len(title) == 0:
                 continue
@@ -214,10 +232,12 @@ while n <= int(numberOfPages):
                     sleep(1)
                     continue
             
+            # get website of company:
             websites = driver.find_elements(By.CLASS_NAME, 'website')
             if len(websites) != 0:
                 website = driver.find_element(By.CLASS_NAME, 'website').text
             
+            # only get comments of company not concern:
             checkboxVisible = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]')
             test = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]/div/div/label')
             
@@ -227,12 +247,15 @@ while n <= int(numberOfPages):
                 checkboxVisible.click()
                 sleep(10)
                 
+            # Mitarbeiteranzahl    
             maZahl = driver.find_element(By.CLASS_NAME,'number_of_employee').text
-                
+            
+            # Token creation: Vertriebsmitarbeiter, firma im Verbund, Kommentar
             nameTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__name__iUAMK')
             companyInGroupComplete = []
             commentsComplete = []
             companyInGroup = driver.find_elements(By.CLASS_NAME,'common-card-with-avatar_card-with-avatar__body__U0ol3.comment_comment__body__9HVG2')
+            
             for y in companyInGroup:
                 html2 = y.get_attribute('innerHTML')
                 soup2 = BeautifulSoup(html2, 'html.parser')
@@ -245,13 +268,12 @@ while n <= int(numberOfPages):
                     companyInGroupComplete.append(span_text2[0].text)
                     
                 if (len(div_text2) == 0):
-                    commentsComplete.append('Unternehmen wurde von Vertriebsmitarbeiter aus Kampagne entfernt')
+                    commentsComplete.append('Kommentar nicht lesbar')
                 else:
                     commentsComplete.append(div_text2[0].text)
             
-                
+            # Token creation: Date   
             dateTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__date__Gn93j')
-            #commentTokens = driver.find_elements(By.CLASS_NAME,'comment_comment__content__rB5+D')
             
             commentTokensComplete = []
             commentBlock = driver.find_elements(By.CSS_SELECTOR, 'div.comment_comment__content__rB5\+D')
@@ -259,6 +281,7 @@ while n <= int(numberOfPages):
             #Creation of 2D Matrix with strings
             matrix_2 = []
             
+            # Creation of complete comment token:
             print("commentsComplete: " + commentsComplete[-1])
             for idx, x in enumerate(nameTokens):
                 commentBlock_Each = []
@@ -268,9 +291,11 @@ while n <= int(numberOfPages):
                 commentBlock_Each.append(commentsComplete[idx])
                 
                 matrix_2.append(commentBlock_Each)
-                
+            
+            # Current time definition    
             this_year = datetime.today().year
-
+            
+            # forbidden comments in comments (ignoring caps):
             for nonoComment in forbiddenComments:
                 for comment in matrix_2:
                     timeStampClx = comment[1]
@@ -299,30 +324,25 @@ while n <= int(numberOfPages):
             ContentInputSingleString = ""
             for idx, x in enumerate(nameTokens):
                 
-                ContentInput = ContentInput + "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "U.i.V.: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
-                ContentInputSingleString = "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "U.i.V.: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
+                ContentInput = ContentInput + "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "Firma: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
+                ContentInputSingleString = "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "Firma: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
                 ContentInputArray.append(ContentInputSingleString)
-              
+             
+            # saving the comment data to a file 
             f = open("Kommentare.txt", "a", encoding='utf-8')
             f.write("\n" + title[0].text + ": \n" + ContentInput)
             f.close()
             
         
-                                                       
+            # Chat GPT input:                                          
             Intro = "Hallo ChatGpt! Ich habe eine Aufgabe für dich. Bitte bewerte folgendes Unternehmen: \n"
             UDaten = title[0].text + "(" + maZahl + ') \n'
             ChatWebsite = 'Website:' + website + '\n'
             ContentInput50 = ContentInputArray[-AnzahlKommentare:]
-
-            ContentInput50String = ' '.join(ContentInput50)
-            
-            ChatGPTInput = Intro + UDaten + ChatWebsite + FirstInput + "Kommentare der Vertriebsmitarbeiter (max. die letzten 30): " + ContentInput50String
-            print(UDaten + ChatWebsite)
-            #print(ChatGPTInput)
-        
+            ContentInput50String = ' '.join(ContentInput50)        
+            ChatGPTInput = Intro + UDaten + ChatWebsite + FirstInput + "Kommentare der Vertriebsmitarbeiter (max. die letzten 20): " + ContentInput50String
             
             load_dotenv()
-    
             openai.api_key = ApiKey
             
             while True:
@@ -356,10 +376,11 @@ while n <= int(numberOfPages):
             print("ChatGPT-Antwort: " + completion.choices[0].message.content)
             
                 
-            f = open("Auswertung%s.txt" % i, "a")
+            f = open("Auswertung%s.txt" % z, "a")
             f.write(title[0].text + ": "+ completion.choices[0].message.content + "\n")
             f.close()
             
+            # getting the evaluation from chatGPT (only Number):
             chatGPTOutput = completion.choices[0].message.content
             rating_als_liste = chatGPTOutput.split(' ')
             
@@ -376,14 +397,12 @@ while n <= int(numberOfPages):
             except ValueError as ve:
                 print("Fehlerhafte Analyse: " + title[0].text)
             
-            
+            # close company window
             driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
             
             sleep(1)
-    
-    # Close button
-    #closeWindowOption = driver.find_elements(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]')
-    
+
+    # go to nex page:
     pageSelector = driver.find_elements(By.CLASS_NAME,'ca_paginationbar_page-selector')
     pageSelector[-1].click()
     sleep(10)
