@@ -86,3 +86,14 @@ Stadtwerke Bonn GmbH: 22
 beeline GmbH: 23
 BHS Corrugated Maschinen- und Anlagenbau GmbH: 3
 Quarzwerke GmbH: 5
+Valeo Schalter und Sensoren GmbH: 70
+Brückner Group GmbH: 40
+Robert Klingel OHG: 10
+Ruben Klingel: 18
+Outokumpu Nirosta GmbH: 15
+Hama Hamaphot Hanke & Thomas GmbH & Co KG: 10
+DSV Air & Sea Germany GmbH: 45
+Emons Holding GmbH & Co. KG: 0
+Klüber Lubrication München SE & Co. KG: 0
+Pfeiffer & May SE: 0
+Habermaass Family GmbH: 47

@@ -208,7 +208,7 @@ while n <= int(numberOfPages):
             continue
         
         # Clicks on a company
-        if int(span_text) >= kommentarMin and kampagnenElementsAvailableOrNot[idx].get('class')[0] == "ca-text-theme":
+        if numberFromSpanText >= kommentarMin and kampagnenElementsAvailableOrNot[idx].get('class')[0] == "ca-text-theme":
             
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable(x)).click() 
             sleep(10)
