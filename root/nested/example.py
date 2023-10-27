@@ -48,19 +48,15 @@ driver = webdriver.Chrome(service=service, options=options)
 
 #Variabeln:
 website = "https://clusterix.io/companies"
-kampagneVon = "SFF Autobot"
-maMin = '351'
-maMax = '401'
-kommentarMin = 5
 forbiddenTitle = "gGmbH"
 forbiddenTitle2 = "gemeinnützig"
 forbiddenTitle3 = "e.V."
 forbiddenTitle4 = "Rente"
 forbiddenTitle5 = "Kliniken"
 forbiddenTitle6 = "Klinikum"
-AnzahlKommentare = 20
-maxDaySinceFatalComment = 300
+
 similarityRatio = 0.89
+
 
 # Funktionen:
 def get_difference(startdate, enddate):
@@ -82,12 +78,12 @@ driver.execute_script('chrome.settingsPrivate.setDefaultZoom(0.7);')
 sleep(2)
 driver.get(website)
 sleep(10)
-
+'''
 #CookieFenster
 shadow_parent = driver.find_element(By.CSS_SELECTOR, '#usercentrics-root')
 outer = driver.execute_script('return arguments[0].shadowRoot', shadow_parent)
 outer.find_element(By.CSS_SELECTOR, "button[data-testid='uc-accept-all-button']").click()
-
+'''
 #Kontoanmeldung
 email = driver.find_element(By.NAME,"email")
 email.send_keys(emailadresse)
@@ -127,8 +123,6 @@ chooseKampagne.send_keys(kampagneVon)
 chooseKampagne.send_keys(Keys.ENTER)
 sleep(2)
 
-#textFeldKampagne = driver.find_element(By.CLASS_NAME, 'ca-pr-yellow.ca-pl-yellow.ca-font-sans.ca-border.ca-border-grey-dark.ca-border-solid.ca-rounded.ca-appearance-none.ca-w-full.ca-box-border.hover:ca-outline-none.focus:ca-outline-none.placeholder:ca-text-grey-dark.placeholder:ca-font-sans.disabled:ca-bg-grey.ca-py-orange.ca-text-base')
-#textFeldKampagne.send_keys(kampagneVon)
 
 # Einstellung der Firmenkriterien
 mitarbeiter = driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[1]/div/div[3]/div[5]/div[1]')
@@ -154,7 +148,6 @@ max_size.send_keys(maMax)
 #vierzehnTage.click()
  
 sleep(5)
-
 
 pages = driver.find_elements(By.CLASS_NAME,'ca-whitespace-nowrap')
 numberOfPages = pages[-1].text
@@ -195,19 +188,23 @@ while n <= int(numberOfPages):
         html = x.get_attribute('innerHTML')
         soup = BeautifulSoup(html, 'html.parser')
         span_text = soup.find('span').text
-               
+        span_text = str(span_text)      
         
+        numberList =[]
         # how many comments?
+        for element in span_text:
+            if element.isnumeric():
+                numberList.append(element)
+                numberFromSpanText = ''.join(numberList)
+                numberFromSpanText = int(numberFromSpanText)
+        
         if span_text == '-' or span_text == '':
             continue
         
-        if "@" in span_text:
-            spant_text = 10
-        
-        if span_text == '99+':
-            span_text = '99'
+        if '@' in span_text:
+            numberFromSpanText = 10
             
-        if int(span_text) < kommentarMin:
+        if numberFromSpanText < kommentarMin:
             continue
         
         # Clicks on a company
@@ -282,50 +279,50 @@ while n <= int(numberOfPages):
             matrix_2 = []
             
             # Creation of complete comment token:
-            print("commentsComplete: " + commentsComplete[-1])
-            for idx, x in enumerate(nameTokens):
+            
+            for idz, z in enumerate(nameTokens):
                 commentBlock_Each = []
-                commentBlock_Each.append(x.text)
-                commentBlock_Each.append(dateTokens[idx].text)
-                commentBlock_Each.append(companyInGroup[idx])
-                commentBlock_Each.append(commentsComplete[idx])
+                commentBlock_Each.append(z.text)
+                commentBlock_Each.append(dateTokens[idz].text)
+                commentBlock_Each.append(companyInGroup[idz])
+                commentBlock_Each.append(commentsComplete[idz])
                 
                 matrix_2.append(commentBlock_Each)
             
             # Current time definition    
             this_year = datetime.today().year
             
+            nonoTrue = False
             # forbidden comments in comments (ignoring caps):
             for nonoComment in forbiddenComments:
+                if nonoTrue:
+                    break
                 for comment in matrix_2:
                     timeStampClx = comment[1]
-                    print("timeStampClx: " + timeStampClx)
-                    print("comment[3]: " + comment[3])
                     if len(timeStampClx) < 19:
                         timeStampClxInterpr = datetime.strptime(comment[1], '%d.%m. um %H:%M').replace(year=this_year)
                     else:
                         timeStampClxInterpr = datetime.strptime(comment[1], '%d.%m.%Y um %H:%M')
                     
                     #similarity = similar(str(nonoComment[0].lower()),str(commentBlock_Each[3].lower))
-                    print("nonoComment: " + (nonoComment[0]).lower())
-                    print("commentBlock: " + (comment[3]).lower())
-                    print("commentBlock (ohen klammern): " + comment[3].lower())
-                    print(datetime.today() - timeStampClxInterpr)
                     
-                    input("Enter to test next...")
-                    if str(nonoComment[0].lower()) in str(comment[3].lower()) and datetime.today() - timeStampClxInterpr < maxDaySinceFatalComment:
+                    timeDelta = datetime.today() - timeStampClxInterpr
+                    if str(nonoComment[0].lower()) in str(comment[3].lower()) and timeDelta.days < maxDaySinceFatalComment:
                         driver.find_element(By.XPATH, '//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[2]/div[2]/div[1]').click()
                         sleep(1)
-                        continue
-            
+                        nonoTrue = True
+                        break
+                    
+            if nonoTrue:
+                break
             #Creation of 1D Matrix with strings
             ContentInputArray = []
             ContentInput = ""
             ContentInputSingleString = ""
-            for idx, x in enumerate(nameTokens):
+            for idw, w in enumerate(nameTokens):
                 
-                ContentInput = ContentInput + "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "Firma: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
-                ContentInputSingleString = "\n" + "Vertriebler: " + x.text + "\n" + "Datum: " + dateTokens[idx].text + "\n" + "Firma: " + companyInGroupComplete[idx] + "\n" + commentsComplete[idx] + "\n"
+                ContentInput = ContentInput + "\n" + "Vertriebler: " + w.text + "\n" + "Datum: " + dateTokens[idw].text + "\n" + "Firma: " + companyInGroupComplete[idw] + "\n" + commentsComplete[idw] + "\n"
+                ContentInputSingleString = "\n" + "Vertriebler: " + w.text + "\n" + "Datum: " + dateTokens[idw].text + "\n" + "Firma: " + companyInGroupComplete[idw] + "\n" + commentsComplete[idw] + "\n"
                 ContentInputArray.append(ContentInputSingleString)
              
             # saving the comment data to a file 
@@ -349,7 +346,7 @@ while n <= int(numberOfPages):
                 
                 try:
                     
-                    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": ChatGPTInput}])
+                    completion = openai.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": ChatGPTInput}])
         
                 except openai.error.RateLimitError as e:
                 # Handle the rate limit error
@@ -375,8 +372,9 @@ while n <= int(numberOfPages):
             
             print("ChatGPT-Antwort: " + completion.choices[0].message.content)
             
-                
-            f = open("Auswertung%s.txt" % z, "a")
+            
+            fileNumber = 0
+            f = open("Auswertung%s.txt" % fileNumber, "a")
             f.write(title[0].text + ": "+ completion.choices[0].message.content + "\n")
             f.close()
             
@@ -388,9 +386,11 @@ while n <= int(numberOfPages):
                 if i.isdigit():
                     rating = i
             
+            print(title[0].text)
+            print(completion.choices[0].message.content)
             print('Extrahierte Bewertung: ' + rating)
             try:    
-                if int(rating) >= 60:
+                if int(rating) >= ratingMinimum:
                 #if rating == "JA":
                     driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[1]/div[1]/div[1]/div').click()
                     sleep(3)

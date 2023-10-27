@@ -17,7 +17,7 @@ Erfolgshonorar = 20% der Förderung
 
 Als Experte für Fördermittel suchst du nach Unternehmen mit folgendem Profil: 
 
-- Haben eine F&E-Abteilung. Dies ist meist bei Technologieunternehmen in den Bereichen Chemie, Softwareentwicklung, Maschinenbau und Robotic der Fall.
+- Haben eine F&E-Abteilung. Dies ist meist bei Technologieunternehmen der Fall. Bsp: Chemie, Softwareentwicklung, Maschinenbau, etc.
 - Viele Mitarbeiter in F&E. Dies ist meist der Fall, wenn das Unternehmen innovative Produkte herstellt.
 - Außerdem tendieren große Unternehmen eher dazu große F&E-Kosten zu haben.
 
