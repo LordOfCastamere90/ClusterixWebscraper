@@ -9,7 +9,6 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
-from selenium_recaptcha_solver import RecaptchaSolver
 from selenium.webdriver.chrome.service import Service
 import csv
 from dateutil.relativedelta import *
@@ -234,16 +233,14 @@ while n <= int(numberOfPages):
             if len(websites) != 0:
                 website = driver.find_element(By.CLASS_NAME, 'website').text
             
-            # only get comments of company not concern:
+            # get comments only from company or also from concern?:
             checkboxVisible = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]')
             test = driver.find_element(By.XPATH,'//*[@id="main_content"]/div/div[4]/div[2]/div/div[2]/div[2]/div[1]/div[1]/div[2]/div/div/label')
-            
+            sleep(2)
             if test.get_attribute("class") == "ca-relative ca-flex ca-justify-center ca-items-center ca-overflow-hidden ca-appearance-none ca-m-0 ca-w-[var(--size)] ca-h-[var(--size)] ca-border ca-border-solid ca-rounded ca-bg-theme ca-border-theme group-hover:ca-border-theme-dark group-hover:ca-bg-theme-dark ca-box-border ca-gap-red ca-font-semibold ca-flex ca-items-center ca-m-0 ca-cursor-pointer":
-                sleep(1)
-            else:
                 checkboxVisible.click()
-                sleep(10)
-                
+                sleep(3)
+                           
             # Mitarbeiteranzahl    
             maZahl = driver.find_element(By.CLASS_NAME,'number_of_employee').text
             
@@ -324,7 +321,7 @@ while n <= int(numberOfPages):
                 ContentInput = ContentInput + "\n" + "Vertriebler: " + w.text + "\n" + "Datum: " + dateTokens[idw].text + "\n" + "Firma: " + companyInGroupComplete[idw] + "\n" + commentsComplete[idw] + "\n"
                 ContentInputSingleString = "\n" + "Vertriebler: " + w.text + "\n" + "Datum: " + dateTokens[idw].text + "\n" + "Firma: " + companyInGroupComplete[idw] + "\n" + commentsComplete[idw] + "\n"
                 ContentInputArray.append(ContentInputSingleString)
-             
+            
             # saving the comment data to a file 
             f = open("Kommentare.txt", "a", encoding='utf-8')
             f.write("\n" + title[0].text + ": \n" + ContentInput)
